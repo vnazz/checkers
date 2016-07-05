@@ -424,20 +424,21 @@ public class board extends JPanel implements MouseListener{
         if (initial == true) {
             graphic.setColor(Color.RED);
             graphic.setFont(new Font("Helvetica", Font.PLAIN, 20));
-            graphic.drawString("WELCOME TO CHECKERS! CLICK TO BEGIN", 0, 300);
+            graphic.drawString("WELCOME TO CHECKERS! CLICK TO BEGIN", 85, 300);
         }
         if (winner != info.NULL) {
             graphic.setColor(Color.RED);
-            graphic.setFont(new Font("Helvetica", Font.PLAIN, 100));
-            if (winner == info.RED)
-                graphic.drawString("RED WINS", 0, 300);
-            else {
-                graphic.drawString("BLACK WINS", 0, 300);
+            if (winner == info.RED) {
+                graphic.setFont(new Font("Helvetica", Font.PLAIN, 100));
+                graphic.drawString("RED WINS", 50, 300);
+            } else {
+                graphic.setFont(new Font("Helvetica", Font.PLAIN, 90));
+                graphic.drawString("BLACK WINS", 30, 300);
             }
         } else if (tie) {
             graphic.setColor(Color.RED);
             graphic.setFont(new Font("Helvetica", Font.PLAIN, 100));
-            graphic.drawString("TIE", 0, 300);
+            graphic.drawString("TIE", 225, 300);
 
         } else {
             for (int row = 0; row < 8; row++) {
