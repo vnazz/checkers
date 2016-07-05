@@ -105,6 +105,11 @@ public class board extends JPanel implements MouseListener{
     }
 
     /**
+     * @return whether or not the last move was a jump
+     */
+    public boolean isJumped() {return jumped;}
+
+    /**
      * @return the weighted score of the board
      */
     public int getRedWeightedScore() {

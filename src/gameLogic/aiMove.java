@@ -11,7 +11,7 @@ public class aiMove {
     private board.color color;
     private board.color oppColor;
     private Tree descisionTree;
-
+    private Move lastMove;
     /**
      * Creates a new aiMove with the color of its pieces
      * @param color the color of the pieces the ai will move
@@ -32,7 +32,8 @@ public class aiMove {
      */
     public Move getAIMove(board board) {
         descisionTree = makeDescisionTree(board);
-        return pickMove();
+        lastMove = pickMove();
+        return lastMove;
     }
 
     /**
@@ -50,7 +51,13 @@ public class aiMove {
      */
     private Tree makeDescisionTree(board board) {
         Tree mainTree = new Tree(board, null, score(board));
-        ArrayList<Move> moves = board.getAllLegalMovesForColor(color);
+        ArrayList<Move> moves;
+        // Handles multiple jumps
+        if (board.isJumped()) {
+            moves  = board.getJumps(lastMove.movRow, lastMove.movCol);
+        } else {
+            moves = board.getAllLegalMovesForColor(color);
+        }
 
         for (Move move : moves) {
             // Make second row
