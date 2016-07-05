@@ -12,7 +12,6 @@ public class game extends Applet {
 
     /**
      * Draws the board and sets up the pieces
-     * @param args
      */
     public static void main(String[] args) {
         JFrame frame = new JFrame();
