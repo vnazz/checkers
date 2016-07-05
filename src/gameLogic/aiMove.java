@@ -8,17 +8,17 @@ import java.util.ArrayList;
  */
 public class aiMove {
 
-    private board.info color;
-    private board.info oppColor;
+    private board.color color;
+    private board.color oppColor;
 
     Tree descisionTree;
 
-    public aiMove(board.info color) {
+    public aiMove(board.color color) {
         this.color = color;
-        if (color == board.info.RED) {
-            oppColor = board.info.BLACK;
+        if (color == board.color.RED) {
+            oppColor = board.color.BLACK;
         } else {
-            oppColor = board.info.RED;
+            oppColor = board.color.RED;
         }
     }
 
@@ -27,7 +27,7 @@ public class aiMove {
         return pickMove();
     }
 
-    public board.info getColor() {
+    public board.color getColor() {
         return color;
     }
 
@@ -96,7 +96,7 @@ public class aiMove {
     }
 
     private int score(board board) {
-        if (color == gameLogic.board.info.RED) {
+        if (color == gameLogic.board.color.RED) {
             return board.getRedWeightedScore() - board.getBlackWeightedScore();
         } else {
             return board.getRedWeightedScore() - board.getRedWeightedScore();
@@ -104,13 +104,13 @@ public class aiMove {
     }
 
     private board copyBoard(board board) {
-        board.info[][] info = new board.info[8][8];
+        gameLogic.board.color[][] color = new board.color[8][8];
         for (int row = 0; row < 8; row++) {
             for (int col = 0; col < 8; col++) {
-                info[row][col] = board.getInfoAtPosition(row, col);
+                color[row][col] = board.getInfoAtPosition(row, col);
             }
         }
-        return new board(info, board.getNumRed(), board.getNumBlack(), board.getNumRedKing(), board.getNumBlackKing());
+        return new board(color, board.getNumRed(), board.getNumBlack(), board.getNumRedKing(), board.getNumBlackKing());
     }
 
 

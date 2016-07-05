@@ -13,39 +13,39 @@ import java.util.ArrayList;
  */
 
 public class board extends JPanel implements MouseListener{
-    private info[][] boardInfo = new info[8][8];
-    private info player = info.RED;
+    private color[][] boardColor = new color[8][8];
+    private color player = color.RED;
     private ArrayList<Move> moves;
     private boolean jumped = false;
     private int redCount = 12;
     private int blackCount = 12;
     private int blackKing = 0;
     private int redKing = 0;
-    private info winner = info.NULL;
+    private color winner = color.NULL;
     private boolean initial = true;
     private aiMove ai;
     private boolean tie = false;
 
     public board() {
         addMouseListener(this);
-        ai = new aiMove(board.info.BLACK);
+        ai = new aiMove(color.BLACK);
     }
 
-    public board(info[][] boardInfo) {
+    public board(color[][] boardColor) {
         addMouseListener(this);
-        this.boardInfo = boardInfo;
+        this.boardColor = boardColor;
     }
 
-    public board(info[][] boardInfo, int numRed, int numBlack) {
+    public board(color[][] boardColor, int numRed, int numBlack) {
         addMouseListener(this);
-        this.boardInfo = boardInfo;
+        this.boardColor = boardColor;
         this.redCount = numRed;
         this.blackCount = numBlack;
     }
 
-    public board(info[][] boardInfo, int numRed, int numBlack, int numRedKing, int numBlackKing) {
+    public board(color[][] boardColor, int numRed, int numBlack, int numRedKing, int numBlackKing) {
         addMouseListener(this);
-        this.boardInfo = boardInfo;
+        this.boardColor = boardColor;
         this.redCount = numRed;
         this.blackCount = numBlack;
         this.redKing = numRedKing;
@@ -76,7 +76,7 @@ public class board extends JPanel implements MouseListener{
     }
 
 
-    public void setPlayer(info color) {
+    public void setPlayer(color color) {
         player = color;
     }
 
@@ -96,12 +96,12 @@ public class board extends JPanel implements MouseListener{
                     handleJump(move);
 
                     if (blackCount == 0) {
-                        winner = info.RED;
+                        winner = color.RED;
                         repaint();
                         return;
                     }
                     if (redCount == 0) {
-                        winner = info.BLACK;
+                        winner = color.BLACK;
                         repaint();
                         return;
                     }
@@ -110,18 +110,18 @@ public class board extends JPanel implements MouseListener{
                     if (!crowned && jumped) {
                         if (getJumps(move.movRow, move.movCol).isEmpty()) {
                             jumped = false;
-                            if (player == info.RED)
-                                player = info.BLACK;
+                            if (player == color.RED)
+                                player = color.BLACK;
                             else
-                                player = info.RED;
+                                player = color.RED;
                         }
                     } else {
                         // Change player
                         jumped = false;
-                        if (player == info.RED) {
-                            player = info.BLACK;
+                        if (player == color.RED) {
+                            player = color.BLACK;
                         } else
-                            player = info.RED;
+                            player = color.RED;
                     }
 
                     break;
@@ -136,12 +136,12 @@ public class board extends JPanel implements MouseListener{
             handleJump(aiMove);
 
             if (blackCount == 0) {
-                winner = info.RED;
+                winner = color.RED;
                 repaint();
                 return;
             }
             if (redCount == 0) {
-                winner = info.BLACK;
+                winner = color.BLACK;
                 repaint();
                 return;
             }
@@ -150,19 +150,19 @@ public class board extends JPanel implements MouseListener{
             if (!crowned && jumped) {
                 if (getJumps(aiMove.movRow, aiMove.movCol).isEmpty()) {
                     jumped = false;
-                    if (player == info.RED)
-                        player = info.BLACK;
+                    if (player == color.RED)
+                        player = color.BLACK;
                     else
-                        player = info.RED;
+                        player = color.RED;
                 }
             } else {
 
                 // Change player
                 jumped = false;
-                if (player == info.RED) {
-                    player = info.BLACK;
+                if (player == color.RED) {
+                    player = color.BLACK;
                 } else
-                    player = info.RED;
+                    player = color.RED;
             }
             repaint();
         }
@@ -183,10 +183,10 @@ public class board extends JPanel implements MouseListener{
         int row = evt.getY() / 75;
 
         if (getAllLegalMovesForColor(player).size() == 0) {
-            if (player == info.RED) {
-                player = info.BLACK;
+            if (player == color.RED) {
+                player = color.BLACK;
             } else {
-                player = info.RED;
+                player = color.RED;
             }
             if (getAllLegalMovesForColor(player).size() == 0) {
                 tie = true;
@@ -207,15 +207,15 @@ public class board extends JPanel implements MouseListener{
 
         if (spaceSkipped.getKey() != move.currRow && spaceSkipped.getKey() != move.movRow &&
                 spaceSkipped.getValue() != move.movCol && spaceSkipped.getValue() != move.currCol) {
-            if (boardInfo[spaceSkipped.getKey()][spaceSkipped.getValue()] == info.RED_KING) {
+            if (boardColor[spaceSkipped.getKey()][spaceSkipped.getValue()] == color.RED_KING) {
                 redKing -= 1;
             }
-            if (boardInfo[spaceSkipped.getKey()][spaceSkipped.getValue()] == info.BLACK_KING) {
+            if (boardColor[spaceSkipped.getKey()][spaceSkipped.getValue()] == color.BLACK_KING) {
                 blackKing -= 1;
             }
-            boardInfo[spaceSkipped.getKey()][spaceSkipped.getValue()] = info.EMPTY;
+            boardColor[spaceSkipped.getKey()][spaceSkipped.getValue()] = color.EMPTY;
             jumped = true;
-            if (player == info.RED) {
+            if (player == color.RED) {
                 blackCount-=1;
 
             } else {
@@ -228,60 +228,60 @@ public class board extends JPanel implements MouseListener{
 
     public ArrayList<Move> getJumps(int row, int col) {
         ArrayList<Move> jumps = new ArrayList<>();
-        info chosenPiece = getInfoAtPosition(row, col);
-        if (player == info.RED) {
-            if (chosenPiece == info.RED || chosenPiece == info.RED_KING) {
-                if (getInfoAtPosition(row + 1, col + 1) == info.BLACK ||
-                        getInfoAtPosition(row + 1, col + 1) == info.BLACK_KING) {
-                    if (getInfoAtPosition(row + 2, col + 2) == info.EMPTY) {
+        color chosenPiece = getInfoAtPosition(row, col);
+        if (player == color.RED) {
+            if (chosenPiece == color.RED || chosenPiece == color.RED_KING) {
+                if (getInfoAtPosition(row + 1, col + 1) == color.BLACK ||
+                        getInfoAtPosition(row + 1, col + 1) == color.BLACK_KING) {
+                    if (getInfoAtPosition(row + 2, col + 2) == color.EMPTY) {
                         jumps.add(new Move(row, col, row + 2, col + 2));
                     }
                 }
-                if (getInfoAtPosition(row + 1, col - 1) == info.BLACK ||
-                        getInfoAtPosition(row + 1, col - 1) == info.BLACK_KING) {
-                    if (getInfoAtPosition(row + 2, col - 2) == info.EMPTY) {
+                if (getInfoAtPosition(row + 1, col - 1) == color.BLACK ||
+                        getInfoAtPosition(row + 1, col - 1) == color.BLACK_KING) {
+                    if (getInfoAtPosition(row + 2, col - 2) == color.EMPTY) {
                         jumps.add(new Move(row, col, row + 2, col - 2));
                     }
                 }
             }
-            if (chosenPiece == info.RED_KING) {
-                if (getInfoAtPosition(row - 1, col + 1) == info.BLACK ||
-                        getInfoAtPosition(row - 1, col + 1) == info.BLACK_KING) {
-                    if (getInfoAtPosition(row - 2, col + 2) == info.EMPTY) {
+            if (chosenPiece == color.RED_KING) {
+                if (getInfoAtPosition(row - 1, col + 1) == color.BLACK ||
+                        getInfoAtPosition(row - 1, col + 1) == color.BLACK_KING) {
+                    if (getInfoAtPosition(row - 2, col + 2) == color.EMPTY) {
                         jumps.add(new Move(row, col, row - 2, col + 2));
                     }
-                } if (getInfoAtPosition(row - 1, col - 1) == info.BLACK ||
-                        getInfoAtPosition(row - 1, col - 1) == info.BLACK_KING) {
-                    if (getInfoAtPosition(row - 2, col - 2) == info.EMPTY) {
+                } if (getInfoAtPosition(row - 1, col - 1) == color.BLACK ||
+                        getInfoAtPosition(row - 1, col - 1) == color.BLACK_KING) {
+                    if (getInfoAtPosition(row - 2, col - 2) == color.EMPTY) {
                         jumps.add(new Move(row, col, row - 2, col - 2));
                     }
                 }
             }
-        } else if (player == info.BLACK) {
-            if (chosenPiece == info.BLACK || chosenPiece == info.BLACK_KING) {
-                if (getInfoAtPosition(row - 1, col + 1) == info.RED ||
-                        getInfoAtPosition(row - 1, col + 1) == info.RED_KING) {
-                    if (getInfoAtPosition(row - 2, col + 2) == info.EMPTY) {
+        } else if (player == color.BLACK) {
+            if (chosenPiece == color.BLACK || chosenPiece == color.BLACK_KING) {
+                if (getInfoAtPosition(row - 1, col + 1) == color.RED ||
+                        getInfoAtPosition(row - 1, col + 1) == color.RED_KING) {
+                    if (getInfoAtPosition(row - 2, col + 2) == color.EMPTY) {
                         jumps.add(new Move(row, col, row - 2, col + 2));
                     }
                 }
-                if (getInfoAtPosition(row - 1, col - 1) == info.RED ||
-                        getInfoAtPosition(row - 1, col - 1) == info.RED_KING) {
-                    if (getInfoAtPosition(row - 2, col - 2) == info.EMPTY) {
+                if (getInfoAtPosition(row - 1, col - 1) == color.RED ||
+                        getInfoAtPosition(row - 1, col - 1) == color.RED_KING) {
+                    if (getInfoAtPosition(row - 2, col - 2) == color.EMPTY) {
                         jumps.add(new Move(row, col, row - 2, col - 2));
                     }
                 }
             }
-            if (chosenPiece == info.BLACK_KING) {
-                if (getInfoAtPosition(row + 1, col + 1) == info.RED ||
-                        getInfoAtPosition(row + 1, col + 1) == info.RED_KING) {
-                    if (getInfoAtPosition(row + 2, col + 2) == info.EMPTY) {
+            if (chosenPiece == color.BLACK_KING) {
+                if (getInfoAtPosition(row + 1, col + 1) == color.RED ||
+                        getInfoAtPosition(row + 1, col + 1) == color.RED_KING) {
+                    if (getInfoAtPosition(row + 2, col + 2) == color.EMPTY) {
                         jumps.add(new Move(row, col, row + 2, col + 2));
                     }
                 }
-                if (getInfoAtPosition(row + 1, col - 1) == info.RED ||
-                        getInfoAtPosition(row + 1, col - 1) == info.RED_KING) {
-                    if (getInfoAtPosition(row + 2, col - 2) == info.EMPTY) {
+                if (getInfoAtPosition(row + 1, col - 1) == color.RED ||
+                        getInfoAtPosition(row + 1, col - 1) == color.RED_KING) {
+                    if (getInfoAtPosition(row + 2, col - 2) == color.EMPTY) {
                         jumps.add(new Move(row, col, row + 2, col - 2));
                     }
                 }
@@ -291,34 +291,34 @@ public class board extends JPanel implements MouseListener{
     }
 
     public ArrayList<Move> getLegalMoves(int row, int col) {
-        info chosenPiece = getInfoAtPosition(row, col);
+        color chosenPiece = getInfoAtPosition(row, col);
         ArrayList<Move> moves = new ArrayList<>();
-        if (player == info.RED) {
-            if (chosenPiece == info.RED || chosenPiece == info.RED_KING) {
-                if (getInfoAtPosition(row + 1, col + 1) == info.EMPTY)
+        if (player == color.RED) {
+            if (chosenPiece == color.RED || chosenPiece == color.RED_KING) {
+                if (getInfoAtPosition(row + 1, col + 1) == color.EMPTY)
                     moves.add(new Move(row, col, row + 1, col + 1));
-                if (getInfoAtPosition(row + 1, col - 1) == info.EMPTY)
+                if (getInfoAtPosition(row + 1, col - 1) == color.EMPTY)
                     moves.add(new Move(row, col, row + 1, col - 1));
 
             }
-            if (chosenPiece == info.RED_KING) {
-                if (getInfoAtPosition(row - 1, col + 1) == info.EMPTY)
+            if (chosenPiece == color.RED_KING) {
+                if (getInfoAtPosition(row - 1, col + 1) == color.EMPTY)
                     moves.add(new Move(row, col, row - 1, col + 1));
-                if (getInfoAtPosition(row - 1, col - 1) == info.EMPTY)
+                if (getInfoAtPosition(row - 1, col - 1) == color.EMPTY)
                     moves.add(new Move(row, col, row - 1, col - 1));
 
             }
-        } else if (player == info.BLACK){
-            if (chosenPiece == info.BLACK || chosenPiece == info.BLACK_KING) {
-                if (getInfoAtPosition(row - 1, col + 1) == info.EMPTY)
+        } else if (player == color.BLACK){
+            if (chosenPiece == color.BLACK || chosenPiece == color.BLACK_KING) {
+                if (getInfoAtPosition(row - 1, col + 1) == color.EMPTY)
                     moves.add(new Move(row, col, row - 1, col + 1));
-                if (getInfoAtPosition(row - 1, col - 1) == info.EMPTY)
+                if (getInfoAtPosition(row - 1, col - 1) == color.EMPTY)
                     moves.add(new Move(row, col, row - 1, col - 1));
             }
-            if (chosenPiece == info.BLACK_KING) {
-                if (getInfoAtPosition(row + 1, col + 1) == info.EMPTY)
+            if (chosenPiece == color.BLACK_KING) {
+                if (getInfoAtPosition(row + 1, col + 1) == color.EMPTY)
                     moves.add(new Move(row, col, row + 1, col + 1));
-                if (getInfoAtPosition(row + 1, col - 1) == info.EMPTY)
+                if (getInfoAtPosition(row + 1, col - 1) == color.EMPTY)
                     moves.add(new Move(row, col, row + 1, col - 1));
             }
         }
@@ -327,35 +327,35 @@ public class board extends JPanel implements MouseListener{
         return moves;
     }
 
-    public ArrayList<Move> getLegalMovesForColor(info color, int row, int col) {
-        info chosenPiece = getInfoAtPosition(row, col);
+    public ArrayList<Move> getLegalMovesForColor(color color, int row, int col) {
+        board.color chosenPiece = getInfoAtPosition(row, col);
         ArrayList<Move> moves = new ArrayList<>();
-        if (color == info.RED) {
-            if (chosenPiece == info.RED || chosenPiece == info.RED_KING) {
-                if (getInfoAtPosition(row + 1, col + 1) == info.EMPTY)
+        if (color == board.color.RED) {
+            if (chosenPiece == board.color.RED || chosenPiece == board.color.RED_KING) {
+                if (getInfoAtPosition(row + 1, col + 1) == board.color.EMPTY)
                     moves.add(new Move(row, col, row + 1, col + 1));
-                if (getInfoAtPosition(row + 1, col - 1) == info.EMPTY)
+                if (getInfoAtPosition(row + 1, col - 1) == board.color.EMPTY)
                     moves.add(new Move(row, col, row + 1, col - 1));
 
             }
-            if (chosenPiece == info.RED_KING) {
-                if (getInfoAtPosition(row - 1, col + 1) == info.EMPTY)
+            if (chosenPiece == board.color.RED_KING) {
+                if (getInfoAtPosition(row - 1, col + 1) == board.color.EMPTY)
                     moves.add(new Move(row, col, row - 1, col + 1));
-                if (getInfoAtPosition(row - 1, col - 1) == info.EMPTY)
+                if (getInfoAtPosition(row - 1, col - 1) == board.color.EMPTY)
                     moves.add(new Move(row, col, row - 1, col - 1));
 
             }
-        } else if (color == info.BLACK){
-            if (chosenPiece == info.BLACK || chosenPiece == info.BLACK_KING) {
-                if (getInfoAtPosition(row - 1, col + 1) == info.EMPTY)
+        } else if (color == board.color.BLACK){
+            if (chosenPiece == board.color.BLACK || chosenPiece == board.color.BLACK_KING) {
+                if (getInfoAtPosition(row - 1, col + 1) == board.color.EMPTY)
                     moves.add(new Move(row, col, row - 1, col + 1));
-                if (getInfoAtPosition(row - 1, col - 1) == info.EMPTY)
+                if (getInfoAtPosition(row - 1, col - 1) == board.color.EMPTY)
                     moves.add(new Move(row, col, row - 1, col - 1));
             }
-            if (chosenPiece == info.BLACK_KING) {
-                if (getInfoAtPosition(row + 1, col + 1) == info.EMPTY)
+            if (chosenPiece == board.color.BLACK_KING) {
+                if (getInfoAtPosition(row + 1, col + 1) == board.color.EMPTY)
                     moves.add(new Move(row, col, row + 1, col + 1));
-                if (getInfoAtPosition(row + 1, col - 1) == info.EMPTY)
+                if (getInfoAtPosition(row + 1, col - 1) == board.color.EMPTY)
                     moves.add(new Move(row, col, row + 1, col - 1));
             }
         }
@@ -364,20 +364,20 @@ public class board extends JPanel implements MouseListener{
         return moves;
     }
 
-    public ArrayList<Move> getAllLegalMovesForColor(info color) {
+    public ArrayList<Move> getAllLegalMovesForColor(color color) {
         ArrayList<Move> moves = new ArrayList<>();
         int count = 0;
         for (int row = 0; row < 8; row++) {
             for (int col = 0; col < 8; col++) {
-                info currPosition = getInfoAtPosition(row, col);
+                board.color currPosition = getInfoAtPosition(row, col);
                 if (currPosition == color) {
                     moves.addAll(getLegalMovesForColor(color, row, col));
                     count++;
                 }
-                if (color == info.RED && currPosition == info.RED_KING){
+                if (color == board.color.RED && currPosition == board.color.RED_KING){
                     moves.addAll(getLegalMovesForColor(color, row, col));
                     count++;
-                } else if (color == info.BLACK && currPosition == info.BLACK_KING) {
+                } else if (color == board.color.BLACK && currPosition == board.color.BLACK_KING) {
                     moves.addAll(getLegalMovesForColor(color, row, col));
                     count++;
                 }
@@ -390,20 +390,20 @@ public class board extends JPanel implements MouseListener{
     }
 
     public boolean movePiece(Move move) {
-        info temp = boardInfo[move.currRow][move.currCol];
-        boardInfo[move.currRow][move.currCol] = info.EMPTY;
+        color temp = boardColor[move.currRow][move.currCol];
+        boardColor[move.currRow][move.currCol] = color.EMPTY;
 
         // handle king
-        if (player == info.RED && move.movRow == 7) {
-            boardInfo[move.movRow][move.movCol] = info.RED_KING;
+        if (player == color.RED && move.movRow == 7) {
+            boardColor[move.movRow][move.movCol] = color.RED_KING;
             redKing += 1;
             return true;
-        } else if (player == info.BLACK && move.movRow == 0){
-            boardInfo[move.movRow][move.movCol] = info.BLACK_KING;
+        } else if (player == color.BLACK && move.movRow == 0){
+            boardColor[move.movRow][move.movCol] = color.BLACK_KING;
             blackKing += 1;
             return true;
         } else {
-            boardInfo[move.movRow][move.movCol] = temp;
+            boardColor[move.movRow][move.movCol] = temp;
             return false;
         }
     }
@@ -426,9 +426,9 @@ public class board extends JPanel implements MouseListener{
             graphic.setFont(new Font("Helvetica", Font.PLAIN, 20));
             graphic.drawString("WELCOME TO CHECKERS! CLICK TO BEGIN", 85, 300);
         }
-        if (winner != info.NULL) {
+        if (winner != color.NULL) {
             graphic.setColor(Color.RED);
-            if (winner == info.RED) {
+            if (winner == color.RED) {
                 graphic.setFont(new Font("Helvetica", Font.PLAIN, 100));
                 graphic.drawString("RED WINS", 50, 300);
             } else {
@@ -479,26 +479,26 @@ public class board extends JPanel implements MouseListener{
             for (int col = 0; col < 8; col++) {
                 if (row % 2 != col % 2) {
                     if (row < 3)
-                        boardInfo[row][col] = info.RED;
+                        boardColor[row][col] = color.RED;
                     else if (row > 4)
-                        boardInfo[row][col] = info.BLACK;
+                        boardColor[row][col] = color.BLACK;
 
                     else {
-                        boardInfo[row][col] = info.EMPTY;
+                        boardColor[row][col] = color.EMPTY;
 
                     }
                 } else {
-                    boardInfo[row][col] = info.EMPTY;
+                    boardColor[row][col] = color.EMPTY;
 
                 }
             }
         }
     }
 
-    public info getInfoAtPosition(int row, int col) {
+    public color getInfoAtPosition(int row, int col) {
         if (row < 0 || row > 7 || col < 0 || col > 7)
-            return info.NULL;
-        return boardInfo[row][col];
+            return color.NULL;
+        return boardColor[row][col];
     }
 
     @Override
@@ -543,7 +543,7 @@ public class board extends JPanel implements MouseListener{
         return true;
     }
 
-    public enum info {
+    public enum color {
         BLACK,
         BLACK_KING,
         RED,
