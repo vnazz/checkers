@@ -25,4 +25,4 @@ an aiMove was readily available.
     The way this game works is the user is always red and has the first move.  To make a move click on a piece and drag it
 to the desired location and drop it.  If it is a valid move then the piece will appear there, if not try again. Once the user
 has made his / her move then click and the ai will make its move.  The game will tell you once someone has won.  Also, double
-jumps are required in this game.
+jumps are required in this game. Also a player cannot double jump if the piece is crowned after the first jump.

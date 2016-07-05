@@ -8,8 +8,12 @@ import java.awt.*;
  * Created by Victoria
  */
 public class game extends Applet {
-    static board b = new board();
+    private static board b = new board();
 
+    /**
+     * Draws the board and sets up the pieces
+     * @param args
+     */
     public static void main(String[] args) {
         JFrame frame = new JFrame();
         frame.setSize(600, 620);
